@@ -120,29 +120,43 @@
   scene.add(lightGroup);
   
    // ANIMATE LOOP
-  function animate() {
+   function animate() {
     requestAnimationFrame(animate);
 
-    const pos = figure.geometry.attributes.position.array;
     const t = performance.now() * 0.001;
 
-    for (let i = 0; i < particleCount; i++) {
+    // slow living pulse
+    const pulse = 1 + Math.sin(t * 1.35) * 0.06;
+    core.scale.setScalar(pulse);
+    halo.scale.setScalar(1 + Math.sin(t * 1.1) * 0.1);
+
+    core.material.opacity = 0.88 + Math.sin(t * 1.35) * 0.07;
+    halo.material.opacity = 0.14 + Math.sin(t * 1.1) * 0.04;
+
+    // soft hovering motion
+    lightGroup.position.y = 0.15 + Math.sin(t * 0.7) * 0.035;
+
+    // living aura motion
+    const pos = aura.geometry.attributes.position.array;
+
+    for (let i = 0; i < auraCount; i++) {
       const i3 = i * 3;
 
+      const bx = auraBasePositions[i3];
+      const by = auraBasePositions[i3 + 1];
+      const bz = auraBasePositions[i3 + 2];
+
       pos[i3] =
-        basePositions[i3] +
-        Math.sin(t * 1.2 + i * 0.13) * 0.01;
+        bx + Math.sin(t * 1.2 + i * 0.21) * 0.01;
 
       pos[i3 + 1] =
-        basePositions[i3 + 1] +
-        Math.cos(t * 1.0 + i * 0.09) * 0.012;
+        by + Math.cos(t * 1.0 + i * 0.17) * 0.012;
 
       pos[i3 + 2] =
-        basePositions[i3 + 2] +
-        Math.sin(t * 1.4 + i * 0.11) * 0.01;
+        bz + Math.sin(t * 1.15 + i * 0.19) * 0.01;
     }
 
-    figure.geometry.attributes.position.needsUpdate = true;
+    aura.geometry.attributes.position.needsUpdate = true;
 
     renderer.render(scene, camera);
   }
