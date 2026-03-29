@@ -43,9 +43,47 @@
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  // LIGHT (soft, subtle)
-  const light = new THREE.AmbientLight(0xffffff, 0.8);
-  scene.add(light);
+   // LIGHTS
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.85);
+  scene.add(ambientLight);
+
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+  directionalLight.position.set(2, 4, 5);
+  scene.add(directionalLight);
+
+  // MATERIAL FOR FIGURE
+  const figureMaterial = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    emissive: 0xddeeff,
+    emissiveIntensity: 0.35,
+    transparent: true,
+    opacity: 0.92
+  });
+
+  // FIGURE GROUP
+  const figure = new THREE.Group();
+
+  // BODY
+  const bodyGeometry = new THREE.CylinderGeometry(0.35, 0.35, 1.6, 32);
+  const body = new THREE.Mesh(bodyGeometry, figureMaterial);
+  figure.add(body);
+
+  // HEAD
+  const headGeometry = new THREE.SphereGeometry(0.32, 32, 32);
+  const head = new THREE.Mesh(headGeometry, figureMaterial);
+  head.position.y = 1.1;
+  figure.add(head);
+
+  // BASE / LOWER ROUNDING
+  const baseGeometry = new THREE.SphereGeometry(0.38, 32, 32);
+  const base = new THREE.Mesh(baseGeometry, figureMaterial);
+  base.position.y = -0.8;
+  base.scale.y = 0.55;
+  figure.add(base);
+
+  // FIGURE POSITION
+  figure.position.set(0, 0, 0);
+  scene.add(figure);
 
   // ANIMATE LOOP
   function animate() {
